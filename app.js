@@ -23,6 +23,7 @@ const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
 // show images 
 const showImages = (images) => {
+  toggleSpiner();
   imagesArea.style.display = 'block';
   gallery.innerHTML = '';
   // show gallery title
@@ -31,12 +32,14 @@ const showImages = (images) => {
     let div = document.createElement('div');
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div)
+    gallery.appendChild(div);
+    
   })
 
 }
 
 const getImages = (query) => {
+  toggleSpiner();
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => showImages(data.hits))
@@ -52,7 +55,8 @@ const selectItem = (event, img) => {
   if (item === -1) {
     sliders.push(img);
   } else {
-    alert('Hey, Already added !')
+    element.classList.remove('added');
+    sliders.pop(img)
   }
 }
 var timer
@@ -70,8 +74,9 @@ const createSlider = () => {
   <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
   <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>
   `;
-
-  sliderContainer.appendChild(prevNext)
+  
+  sliderContainer.appendChild(prevNext);
+  
   document.querySelector('.main').style.display = 'block';
   // hide image aria
   imagesArea.style.display = 'none';
@@ -140,3 +145,9 @@ searchBtn.addEventListener('click', function () {
 sliderBtn.addEventListener('click', function () {
   createSlider()
 })
+// adding spinner
+const toggleSpiner = () =>{
+  const spinerLoad = document.getElementById('spiner');
+
+  spinerLoad.classList.toggle('d-none')
+}
